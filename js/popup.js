@@ -21,8 +21,6 @@ $(document).ready(function() {
 
             });
             document.body.appendChild(tableca);
-
-            //  document.write(result.SwipeRecord);
         });
 
     });
