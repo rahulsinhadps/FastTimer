@@ -1,6 +1,8 @@
 //alert("wololo");
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
-    var inp = {SelectedDate: "09-12-2017", empid: "106846;87" };
+    var employeeId = parseInt(response.fields.empId);
+    var date = moment().format('MM-DD-YYYY');
+    var inp = {SelectedDate: date, empid: employeeId };
     $.ajax({
         type: "POST",
         async: false,
@@ -11,12 +13,4 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
         },
         contentType: "application/json; charset=utf-8"
     });
-});
-
-//This line opens up a long-lived connection to your background page.
-var port = chrome.runtime.connect({name:"mycontentscript"});
-port.onMessage.addListener(function(message,sender){
-    if(message.greeting === "hello"){
-        alert(message.greeting);
-    }
 });

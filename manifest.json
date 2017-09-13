@@ -6,6 +6,7 @@
   "background": {
     "scripts": [
       "jquery-3.2.1.min.js",
+      "moment.js",
       "background.js"
     ]
   },
