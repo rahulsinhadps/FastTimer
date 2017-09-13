@@ -14,22 +14,9 @@ $(document).ready(function() {
 
             console.log(result.SwipeRecord);
             $("tbody").html("");
+            $("#swipeTable").show();
             $.each(result.SwipeRecord, function() {
                 var $tr = $("<tr><td>"+this.swipeInOut+"</td><td>"+this.swipeTime+"</td></td></tr>");
-/*                var tr = document.createElement('tr');
-
-                var td1 = document.createElement('td');
-                var td2 = document.createElement('td');
-
-                var text1 = document.createTextNode(this.swipeInOut);
-                var text2 = document.createTextNode(this.swipeTime);
-
-                td1.appendChild(text1);
-                td2.appendChild(text2);
-                tr.appendChild(td1);
-                tr.appendChild(td2);
-
-                tableca.appendChild(tr);*/
                 $("tbody").append($tr);
 
             });
