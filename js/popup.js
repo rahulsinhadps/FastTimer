@@ -11,9 +11,7 @@ $(document).ready(function() {
             var result = JSON.parse(response.d);
             console.log(result.SwipeRecord);
             $("#timeLogTable").html("");
-            $("#swipeTable").show();
             var index = 0;
-            var armyTimeArray = [];
             var lastIn = null;
             var totalMinutes = 0;
             $.each(result.SwipeRecord, function() {
@@ -22,13 +20,12 @@ $(document).ready(function() {
                 if(lastIn == null && this.swipeInOut == "In") {
             		lastIn = logDate;
             	}
-            	if(this.swipeInOut == "Out") {
+            	if(this.swipeInOut == "Out" && lastIn != null) {
             		var output = moment.utc(moment(logDate,"MM-DD-YYYY HH:mm:ss").diff(moment(lastIn,"MM-DD-YYYY HH:mm:ss"))).format("HH:mm");
 					var outputArray = output.split(":");
 					totalMinutes += (parseInt(outputArray[0])*60)+parseInt(outputArray[1]);
 					lastIn = null;
             	}
-                armyTimeArray.push(logDate);
                 var $tr = $("<tr><td>"+this.swipeInOut+"</td><td>"+armyTime+"</td></td></tr>");
                 $("#timeLogTable").append($tr);
 
@@ -42,6 +39,12 @@ $(document).ready(function() {
 
         	}
 			$totalLogTime = $("<div>"+ Math.floor(totalMinutes/60) + " hours " + totalMinutes%60 + " minutes </div>");
+
+			if(totalMinutes == 0) {
+				$("#swipeTable").hide();
+			} else {
+				$("#swipeTable").show();
+			}	
 
 			$(".js-chip").html($totalLogTime);
 			$("#chipDiv").show();

@@ -4,6 +4,16 @@ html {
     overflow-y: auto;
 }
 
+.container {
+	text-align: center;
+}
+.card-panel-title {
+	height: 20px;
+    line-height: 0px;
+    font-size: 22px;
+}
+
 #empForm {
     padding: 75px;
+    padding-top: 15px;
 }
