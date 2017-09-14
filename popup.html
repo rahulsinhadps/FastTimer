@@ -15,6 +15,8 @@
     <input type="text" value="" id="empName" name="empName"/>-->
     <span>Please enter your employee id:</span>
     <input type="text" value="" id="empId" name="empId"/>
+    <span>Please enter date:</span>
+    <input type="text" class="datepicker" name="dateForLog">
     <a class="waves-effect waves-light btn blue darken-3" id="submitEmpId">Submit</a>
 </form>
 <table class="striped" style="display: none;" id="swipeTable">
@@ -25,7 +27,7 @@
     </tr>
     </thead>
 
-    <tbody>
+    <tbody id="timeLogTable">
     </tbody>
 </table>
 </body>

@@ -1,7 +1,7 @@
 //alert("wololo");
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
     var employeeId = parseInt(response.fields.empId);
-    var date = moment().format('MM-DD-YYYY');
+    var date = response.fields.dateForLog;
     var inp = {SelectedDate: date, empid: employeeId };
     $.ajax({
         type: "POST",
@@ -9,6 +9,7 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
         url: "https://itportaltimer.azurewebsites.net/attendancecalendar/pages/Attendancecalendar.aspx/getDailyPunchRecords",
         data: JSON.stringify(inp),
         success: function(data) {
+            var dt = moment("12:15 AM", ["h:mm A"]).format("HH:mm");
             sendResponse(data);
         },
         contentType: "application/json; charset=utf-8"
