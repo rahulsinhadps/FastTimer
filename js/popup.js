@@ -12,11 +12,40 @@ $(document).ready(function() {
             console.log(result.SwipeRecord);
             $("#timeLogTable").html("");
             $("#swipeTable").show();
+            var index = 0;
+            var armyTimeArray = [];
+            var lastIn = null;
+            var totalMinutes = 0;
             $.each(result.SwipeRecord, function() {
-                var $tr = $("<tr><td>"+this.swipeInOut+"</td><td>"+this.swipeTime+"</td></td></tr>");
+                var armyTime = moment(this.swipeTime, ["h:mm A"]).format("HH:mm");
+                var logDate = $("#dateForLog").val() + " " + armyTime + ":00";
+                if(lastIn == null && this.swipeInOut == "In") {
+            		lastIn = logDate;
+            	}
+            	if(this.swipeInOut == "Out") {
+            		var output = moment.utc(moment(logDate,"MM-DD-YYYY HH:mm:ss").diff(moment(lastIn,"MM-DD-YYYY HH:mm:ss"))).format("HH:mm");
+					var outputArray = output.split(":");
+					totalMinutes += (parseInt(outputArray[0])*60)+parseInt(outputArray[1]);
+					lastIn = null;
+            	}
+                armyTimeArray.push(logDate);
+                var $tr = $("<tr><td>"+this.swipeInOut+"</td><td>"+armyTime+"</td></td></tr>");
                 $("#timeLogTable").append($tr);
 
             });
+        	if (lastIn != null) {
+        		var currentDate = (new Date()).toString("MM-DD-YYYY HH:mm:ss");
+        		var output = moment.utc(moment(new Date()).diff(moment(lastIn,"MM-DD-YYYY HH:mm:ss"))).format("HH:mm");
+					var outputArray = output.split(":");
+					totalMinutes += (parseInt(outputArray[0])*60)+parseInt(outputArray[1]);
+					lastIn = null;
+
+        	}
+			$totalLogTime = $("<div>"+ Math.floor(totalMinutes/60) + " hours " + totalMinutes%60 + " minutes </div>");
+
+			$(".js-chip").html($totalLogTime);
+			$("#chipDiv").show();
+
         });
 
     });

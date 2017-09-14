@@ -7,6 +7,7 @@
     <script src="/jquery-3.2.1.min.js"></script>
     <script src="/js/popup.js"></script>
     <script src="/js/materialize.min.js"></script>
+    <script src="/moment.js"></script>
 
 </head>
 <body>
@@ -16,9 +17,15 @@
     <span>Please enter your employee id:</span>
     <input type="text" value="" id="empId" name="empId"/>
     <span>Please enter date:</span>
-    <input type="text" class="datepicker" name="dateForLog">
+    <input type="text" class="datepicker" name="dateForLog" id="dateForLog">
     <a class="waves-effect waves-light btn blue darken-3" id="submitEmpId">Submit</a>
 </form>
+<div style="display: none;" id="chipDiv">
+Time logged : 
+<div class="chip js-chip" >
+    
+  </div></div>
+
 <table class="striped" style="display: none;" id="swipeTable">
     <thead>
     <tr>
