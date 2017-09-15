@@ -3,7 +3,6 @@ $(document).ready(function () {
     initializeSubmitDataClick();
     chrome.storage.sync.get("empId", function (response) {
         $("#empId").val(response.empId);
-        sleep(50);
         $("#submitEmpId").click();
     });
 });
@@ -73,6 +72,10 @@ function calculateTimeLogAndSetTableData(response) {
         lastIn = null;
 
     }
+    setCalculatedTotalTimeToPage(totalMinutes);
+}
+
+function setCalculatedTotalTimeToPage(totalMinutes) {
     var $totalLogTime = $("<div>" + Math.floor(totalMinutes / 60) + " hours " + totalMinutes % 60 + " minutes </div>");
 
     if (totalMinutes == 0) {
@@ -83,14 +86,5 @@ function calculateTimeLogAndSetTableData(response) {
 
     $(".js-chip").html($totalLogTime);
     $("#chipDiv").show();
-}
-
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds){
-            break;
-        }
-    }
 }
 
