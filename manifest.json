@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "FastTimer",
-  "description": "This extension shows the swipe in and swipe out times of a particular employee.",
+  "description": "Small extension to check the time log.",
   "version": "1.0",
   "background": {
     "scripts": [
