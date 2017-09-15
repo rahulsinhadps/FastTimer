@@ -18,3 +18,7 @@ html {
     padding-top: 15px;
     padding-bottom: 25px;
 }
+
+#swipeTable #timeLogTable td {
+	font-size: 12px;
+}

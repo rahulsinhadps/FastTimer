@@ -1,6 +1,6 @@
 $(document).ready(function() {
     initializeDatePicker();
-    $("#submitEmpId").click(function() {
+    $("#submitEmpId").click(function(event) {
         var $employeeIdForm = $("#empForm");
         var fields = {};
         $employeeIdForm.find(":input").each(function() {
@@ -31,8 +31,12 @@ $(document).ready(function() {
 
             });
         	if (lastIn != null) {
-        		var currentDate = (new Date()).toString("MM-DD-YYYY HH:mm:ss");
-        		var output = moment.utc(moment(new Date()).diff(moment(lastIn,"MM-DD-YYYY HH:mm:ss"))).format("HH:mm");
+        		var lastLog = new Date();
+        		var lastInDate = (moment(lastIn, "MM-DD-YYYY HH:mm:ss")).toDate();
+        		if ((new Date).getDate() - lastInDate.getDate() != 0) {
+        			lastLog.setHours(0,0,0);	
+        		}
+        		var output = moment.utc(moment(lastLog).diff(moment(lastIn,"MM-DD-YYYY HH:mm:ss"))).format("HH:mm");
 					var outputArray = output.split(":");
 					totalMinutes += (parseInt(outputArray[0])*60)+parseInt(outputArray[1]);
 					lastIn = null;
@@ -50,6 +54,8 @@ $(document).ready(function() {
 			$("#chipDiv").show();
 
         });
+
+        event.preventDefault();
 
     });
 
