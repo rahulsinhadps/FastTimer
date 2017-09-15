@@ -1,8 +1,10 @@
-//alert("wololo");
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
     var employeeId = parseInt(response.fields.empId);
     var date = response.fields.dateForLog;
     var inp = {SelectedDate: date, empid: employeeId };
+    if (employeeId != null && employeeId != "") {
+        utility.saveEmployeeId(employeeId);
+    }
     $.ajax({
         type: "POST",
         async: false,
@@ -15,3 +17,12 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
         contentType: "application/json; charset=utf-8"
     });
 });
+
+var utility = {
+    saveEmployeeId : function(empId) {
+        // Save it using the Chrome extension storage API.
+        chrome.storage.sync.set({'empId': empId}, function() {
+            console.log("Saved employeeId");
+        });
+    }
+}
