@@ -22,3 +22,7 @@ html {
 #swipeTable #timeLogTable td {
 	font-size: 12px;
 }
+
+span {
+	font-weight: bold;
+}
