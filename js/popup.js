@@ -6,10 +6,10 @@ $(document).ready(function () {
 
     timeLogger.initializeDatePicker();
     timeLogger.initializeSubmitDataClick();
+    timeLogger.initializeTotalTimeCalculationOfWeek();
 });
 
 var todayLoggedTime;
-var totalLogTimeInWeek = 0;
 
 var timeLogger = {
     initializeDatePicker: function () {
@@ -33,7 +33,7 @@ var timeLogger = {
             var input = {fields: timeLogger.createInputToGetTime()};
 
             chrome.runtime.sendMessage(input, function (response) {
-                var totalTimeLoggedInADay = timeLogger.calculateTimeLogAndSetTableData(response);
+                var totalTimeLoggedInADay = timeLogger.calculateTimeLogAndSetTableData(response[0]);
 
                 todayLoggedTime = totalTimeLoggedInADay;
                 $("#chipDiv").hide();
@@ -44,7 +44,7 @@ var timeLogger = {
                     $("#swipeTable").hide();
                 }
 
-                timeLogger.initializeTotalTimeCalculationOfWeek();
+                timeLogger.initializeTotalTimeCalculationOfWeek(response[1]);
 
             });
 
@@ -62,93 +62,70 @@ var timeLogger = {
         return fields;
     },
 
-    initializeTotalTimeCalculationOfWeek: function () {
+    initializeTotalTimeCalculationOfWeek: function (response) {
         var $today = new Date();
         var calculateWeekDay = $today.getDay();
-        var counterToDecrementDate = 0;
-        var fields = timeLogger.createInputToGetTime();
-        var validNoOfDays = 5;
 
         if (calculateWeekDay === 6 || calculateWeekDay === 0) {
             $("#chipDivWeekend").show();
         } else {
-            timeLogger.getTotalWeekCalculatedTimeAtInstance(fields,
-                $today, calculateWeekDay, totalLogTimeInWeek, counterToDecrementDate, validNoOfDays);
+            timeLogger.calculateTotalTimeLogForThisWeek(response);
         }
     },
 
-    getTotalWeekCalculatedTimeAtInstance: function (fields,
-                                                    $today,
-                                                    calculateWeekDay,
-                                                    totalLogTimeInWeek,
-                                                    counterToDecrementDate,
-                                                    validNoOfDays) {
-        if (calculateWeekDay === counterToDecrementDate) {
-            timeLogger.showHoursRemainingToClock40(validNoOfDays, totalLogTimeInWeek, todayLoggedTime);
-        } else {
-            var dateToCompute = new Date();
-            dateToCompute.setDate($today.getDate() - counterToDecrementDate);
-            fields.dateForLog = timeLogger.getFormattedDate(dateToCompute);
-            var input = {fields: fields};
+    calculateTotalTimeLogForThisWeek: function (response) {
+        var result = JSON.parse(response.d);
+        var weeklyHoursListOfMonth = result.WeeklyHours;
 
-            if (counterToDecrementDate === 0) {
-                if (todayLoggedTime === null || todayLoggedTime === '') {
-                    validNoOfDays--;
-                } else {
-                    totalLogTimeInWeek = totalLogTimeInWeek + todayLoggedTime;
-                }
-
-                counterToDecrementDate++;
-
-                timeLogger.getTotalWeekCalculatedTimeAtInstance(fields,
-                    $today, calculateWeekDay, totalLogTimeInWeek, counterToDecrementDate);
-            } else {
-                chrome.runtime.sendMessage(input, function (response) {
-                    var totalTimeLoggedInPassedDate = timeLogger.calculateTimeLogAndSetTableData(response);
-
-                    if (totalTimeLoggedInPassedDate === null || totalTimeLoggedInPassedDate === '') {
-                        validNoOfDays--;
-                    } else {
-                        totalLogTimeInWeek = totalLogTimeInWeek + totalTimeLoggedInPassedDate;
-                    }
-
-                    counterToDecrementDate++;
-
-                    timeLogger.getTotalWeekCalculatedTimeAtInstance(fields,
-                        $today, calculateWeekDay, totalLogTimeInWeek, counterToDecrementDate);
-
-                });
-            }
-        }
+        timeLogger.displayAverageHoursOfLastWeek(weeklyHoursListOfMonth);
     },
 
-    getFormattedDate: function (dateToCompute) {
-        return (timeLogger.appendZeroIfOneCharacter((dateToCompute.getMonth()+1).toString())
-            + '-' + timeLogger.appendZeroIfOneCharacter(dateToCompute.getDate().toString())
-            + '-' + (parseInt(dateToCompute.getYear()) + 1900)).toString();
+    displayAverageHoursOfLastWeek: function (weeklyHoursListOfMonth) {
+        var thisWeekTimeLog = '';
+        $.each(weeklyHoursListOfMonth, function (i, val) {
+            thisWeekTimeLog = val;
+        });
+
+        timeLogger.splitAndDisplayAvergaeAndTotalTimeLog(thisWeekTimeLog);
     },
 
-    appendZeroIfOneCharacter: function (param) {
-        var paramInInt = parseInt(param);
-        return paramInInt < 10
-            ? '0' + param
-            : param;
+    splitAndDisplayAvergaeAndTotalTimeLog: function (thisWeekTimeLog) {
+        var splitedWeekTimeLog = thisWeekTimeLog.split(";");
+        var averageTimeLog = splitedWeekTimeLog[0];
+        var totalLogTimeThisWeekAtInstanceInMinutes = timeLogger.getTotalTimeLogThisWeekAtInstance(splitedWeekTimeLog[1]);
+
+        timeLogger.displayAverageTimeLog(averageTimeLog);
+        timeLogger.displayTotalTimeLogInWeekAtInstance(totalLogTimeThisWeekAtInstanceInMinutes);
     },
 
-    showHoursRemainingToClock40: function (validNoOfDays, totalLogTimeInWeekDone, todayLoggedTime) {
-        var totalHoursCompulsoryToClock = validNoOfDays * 8;
-        var totalMinutesCompulsoryToClock = totalHoursCompulsoryToClock * 60;
-        var remainingMinutesCompulsoryToClock = totalMinutesCompulsoryToClock - totalLogTimeInWeekDone;
+    getTotalTimeLogThisWeekAtInstance: function (totalWeekTimeLog) {
+        var hourAndMinutesOftotalWeekTimeLog = totalWeekTimeLog.split(":");
+        return parseInt(hourAndMinutesOftotalWeekTimeLog[0]) * 60 + parseInt(hourAndMinutesOftotalWeekTimeLog[1]) + todayLoggedTime;
+    },
 
-        if (remainingMinutesCompulsoryToClock > 0) {
-            timeLogger.setCalculatedTotalTimeReamainingToPage(remainingMinutesCompulsoryToClock);
-        } else {
-            if (todayLoggedTime < 330) {
-                $("#chipDivCompleteMinHours").show();
-            } else {
-                console.log("GO HOME");
-            }
-        }
+    displayAverageTimeLog: function (averageTimeLog) {
+        var splitHoursAndMinutes = averageTimeLog.split(":");
+        var $averageTimeLog = $("<div>"
+            + splitHoursAndMinutes[0]
+            + " hours "
+            + splitHoursAndMinutes[1]
+            + " minutes "
+            + "</div>");
+
+        $(".js2-chip").html($averageTimeLog);
+        $("#chip2Div").show();
+    },
+
+    displayTotalTimeLogInWeekAtInstance: function (totalLogTimeThisWeekAtInstanceInMinutes) {
+        var $totalLogTimeAtIstance = $("<div>"
+            + Math.floor(totalLogTimeThisWeekAtInstanceInMinutes / 60)
+            + " hours "
+            + (totalLogTimeThisWeekAtInstanceInMinutes % 60)
+            + " minutes "
+            + "</div>");
+
+        $(".js3-chip").html($totalLogTimeAtIstance);
+        $("#chip3Div").show();
     },
 
     calculateTimeLogAndSetTableData: function (response) {
@@ -207,13 +184,6 @@ var timeLogger = {
 
         $(".js-chip").html($totalLogTime);
         $("#chipDiv").show();
-    },
-
-    setCalculatedTotalTimeReamainingToPage: function (totalMinutes) {
-        var $totalRemainingInWeek = $("<div>" + Math.floor(totalMinutes / 60) + " hours " + totalMinutes % 60 + " minutes </div>");
-
-        $(".js2-chip").html($totalRemainingInWeek);
-        $("#chip2Div").show();
     }
 }
 

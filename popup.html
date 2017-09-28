@@ -12,67 +12,71 @@
 
 </head>
 <body>
-	<div class="container">
-		<div class="card-panel blue darken-3 card-panel-title">
+<div class="container">
+    <div class="card-panel blue darken-3 card-panel-title">
 			<span class="white-text text-darken-2">
 				FastTimer
 			</span>
-		</div>
-	
-		<form id="empForm" class="col s12">
-			<div class="input-field col s12">
-				<input type="text" value="" id="empId" name="empId" class="input-field validate" />
-				<label for="empId">
-					Employee Id
-				</label>
-			</div>
-		
-			<div class="input-field col s12">
-				<input type="text" class="datepicker" name="dateForLog" id="dateForLog" class="input-field validate">
-				<label for="dateForLog">Pick a date (MM-DD-YYYY)</label>
-			</div>
+    </div>
 
-			<button class="btn waves-effect waves-light btn blue darken-3" type="submit" name="action" id="submitEmpId">Submit
-				<i class="material-icons right">send</i>
-			</button>
-		</form>
-	
-		<div style="display: none;" id="chipDiv">
-			<span>Time logged :</span>
-			<div class="chip js-chip" >
-    
-			</div>
-		</div>
-		
-		<div style="display: none;" id="chip2Div">
-			<span>Time Remaining :</span>
-			<div class="chip js2-chip" >
-    
-			</div>
-		</div>
-		
-		</br>
-  
-  		<div style="display: none;" id="chipDivCompleteMinHours">
-			<h3>COMPLETE MIN HOURS</h3>
-		</div>
-		
-		<div style="display: none;" id="chipDivWeekend">
-			<h2>IT'S A WEEKEND ENJOY!</h2>
-		</div>
+    <form id="empForm" class="col s12">
+        <div class="input-field col s12">
+            <input type="text" value="" id="empId" name="empId" class="input-field validate"/>
+            <label for="empId">
+                Employee Id
+            </label>
+        </div>
 
-		<table class="striped centered" style="display: none;" id="swipeTable">
-			<thead>
-				<tr>
-					<th>Status</th>
-					<th>Time</th>
-				</tr>
-			</thead>
+        <div class="input-field col s12">
+            <input type="text" class="datepicker" name="dateForLog" id="dateForLog" class="input-field validate">
+            <label for="dateForLog">Pick a date (MM-DD-YYYY)</label>
+        </div>
 
-			<tbody id="timeLogTable">
-			</tbody>
-		</table>
-	</div>
+        <button class="btn waves-effect waves-light btn blue darken-3" type="submit" name="action" id="submitEmpId">
+            Submit
+            <i class="material-icons right">send</i>
+        </button>
+    </form>
+
+    <div style="display: none;" id="chipDiv">
+        <span>Time logged Today:</span>
+        <div class="chip js-chip">
+
+        </div>
+    </div>
+
+    <div style="display: none;" id="chip2Div">
+        <span>Average :</span>
+        <div class="chip js2-chip">
+
+        </div>
+    </div>
+
+    <div style="display: none;" id="chip3Div">
+        <span>Total-Time-Inc-Today :</span>
+        <div class="chip js3-chip">
+
+        </div>
+    </div>
+
+    </br>
+
+    <div style="display: none;" id="chipDivWeekend">
+        <h2>IT'S A WEEKEND ENJOY!</h2>
+    </div>
+
+    <table class="striped centered" style="display: none;" id="swipeTable">
+        <thead>
+        <tr>
+            <th>Status</th>
+            <th>Time</th>
+        </tr>
+        </thead>
+
+        <tbody id="timeLogTable">
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
 
