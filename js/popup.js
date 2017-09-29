@@ -64,6 +64,12 @@ var timeLogger = {
 		} else {
 			for (var i = calculateWeekDay; i > 0; i--) {
 				var dateToLog = $today.getDate() - counterToDecrementDate;
+							var $employeeIdForm = $("#empForm");
+							var fields = {};
+							$employeeIdForm.find(":input").each(function () {
+            							fields[this.name] = $(this).val();
+					});
+				
 				var input = {fields: fields};
 				
 				chrome.runtime.sendMessage(input, function (response) {
