@@ -91,7 +91,7 @@ var timeLogger = {
 			}
 			
 			if (calculateWeekDay === 5) {
-				showHoursRemainingToClock40(validNoOfDays, totalLogTimeInWeek, todayLoggedTime);
+				timeLogger.showHoursRemainingToClock40(validNoOfDays, totalLogTimeInWeek, todayLoggedTime);
 			}
 		
 		}
