@@ -46,7 +46,7 @@ var timeLogger = {
 
                 var splitInputDate = input.fields.dateForLog.toString().split("-");
 
-                if ((splitInputDate[0] === $today.getDate()) && (splitInputDate[1] === $today.getMonth() + 1)) {
+                if ((splitInputDate[1] == $today.getDate()) && (splitInputDate[0] == timeLogger.appendZeroIfSingleCharacter($today.getMonth() + 1))) {
                     timeLogger.initializeTotalTimeCalculationOfWeek(response[1]);
                 }
 
@@ -54,6 +54,12 @@ var timeLogger = {
 
             event.preventDefault();
         });
+    },
+
+    appendZeroIfSingleCharacter: function (monthInInt) {
+        return monthInInt < 10
+            ? '0' + monthInInt
+            : monthInInt;
     },
 
     createInputToGetTime: function () {
