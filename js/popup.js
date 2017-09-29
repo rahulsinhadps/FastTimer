@@ -172,7 +172,7 @@ var timeLogger = {
 	setCalculatedTotalTimeReamainingToPage : function(totalMinutes) {
 		var $totalRemainingInWeek = $("<div>" + Math.floor(totalMinutes / 60) + " hours " + totalMinutes % 60 + " minutes </div>");
 
-		$(".js2-chip").html($totalLogTime);
+		$(".js2-chip").html($totalRemainingInWeek);
 		$("#chip2Div").show();
 	}
 	
