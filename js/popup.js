@@ -35,7 +35,6 @@ var timeLogger = {
             chrome.runtime.sendMessage(input, function (response) {
                 var totalTimeLoggedInADay = timeLogger.calculateTimeLogAndSetTableData(response[0]);
 
-                todayLoggedTime = totalTimeLoggedInADay;
                 $("#chipDiv").hide();
 
                 if (totalTimeLoggedInADay != null && totalTimeLoggedInADay != 0) {
@@ -46,7 +45,9 @@ var timeLogger = {
 
                 var splitInputDate = input.fields.dateForLog.toString().split("-");
 
-                if ((splitInputDate[1] == $today.getDate()) && (splitInputDate[0] == timeLogger.appendZeroIfSingleCharacter($today.getMonth() + 1))) {
+                if ((splitInputDate[1] == $today.getDate())
+                    && (splitInputDate[0] == timeLogger.appendZeroIfSingleCharacter($today.getMonth() + 1))) {
+                    todayLoggedTime = totalTimeLoggedInADay;
                     timeLogger.initializeTotalTimeCalculationOfWeek(response[1]);
                 }
 
