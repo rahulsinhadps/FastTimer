@@ -30,6 +30,9 @@ var timeLogger = {
 
     initializeSubmitDataClick: function () {
         $("#submitEmpId").click(function (event) {
+
+            timeLogger.hideAllDivsBeforeProcessing();
+
             var input = {fields: timeLogger.createInputToGetTime()};
 
             chrome.runtime.sendMessage(input, function (response) {
@@ -57,6 +60,15 @@ var timeLogger = {
         });
     },
 
+    hideAllDivsBeforeProcessing: function () {
+      for (var i=1; i < 4; i++) {
+          var elementId = 'chip' + i + 'Div';
+          $('#' + elementId).hide();
+      }
+
+      $('#chipDivMinReq').hide();
+    },
+
     appendZeroIfSingleCharacter: function (monthInInt) {
         return monthInInt < 10
             ? '0' + monthInInt
@@ -80,6 +92,9 @@ var timeLogger = {
             $("#chipDivWeekend").show();
         } else {
             timeLogger.calculateTotalTimeLogForThisWeek(response);
+            if (todayLoggedTime < 330 && calculateWeekDay == 5) {
+                $('#chipDivMinReq').show();
+            }
         }
     },
 
