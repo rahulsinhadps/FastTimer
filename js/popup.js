@@ -81,11 +81,11 @@ var timeLogger = {
 						timeLogger.setCalculatedTotalTimeToPage(totalTimeLoggedInPassedDate);
 					}
 				
+					if (totalTimeLoggedInPassedDate == null || totalTimeLoggedInPassedDate == undefined || totalTimeLoggedInPassedDate == 0) {
+						validNoOfDays--;
+					}
+					
 				});
-				
-				if (totalTimeLoggedInPassedDate == null || totalTimeLoggedInPassedDate == undefined || totalTimeLoggedInPassedDate == 0) {
-					validNoOfDays--;
-				}
 				
 				counterToDecrementDate++;
 			}
