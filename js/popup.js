@@ -88,7 +88,7 @@ var timeLogger = {
         } else {
             var dateToCompute = new Date();
             dateToCompute.setDate($today.getDate() - counterToDecrementDate);
-            fields.dateForLog = dateToCompute.toDateString();
+            fields.dateForLog = timeLogger.getFormattedDate(dateToCompute);
             var input = {fields: fields};
 
             if (counterToDecrementDate === 0) {
@@ -120,6 +120,19 @@ var timeLogger = {
                 });
             }
         }
+    },
+
+    getFormattedDate: function (dateToCompute) {
+        return (timeLogger.appendZeroIfOneCharacter((dateToCompute.getMonth()+1).toString())
+            + '-' + timeLogger.appendZeroIfOneCharacter(dateToCompute.getDate().toString())
+            + '-' + (parseInt(dateToCompute.getYear()) + 1900)).toString();
+    },
+
+    appendZeroIfOneCharacter: function (param) {
+        var paramInInt = parseInt(param);
+        return paramInInt < 10
+            ? '0' + param
+            : param;
     },
 
     showHoursRemainingToClock40: function (validNoOfDays, totalLogTimeInWeekDone, todayLoggedTime) {
