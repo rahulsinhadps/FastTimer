@@ -9,6 +9,7 @@ $(document).ready(function () {
 });
 
 var todayLoggedTime;
+var $today = new Date();
 
 var timeLogger = {
     initializeDatePicker: function () {
@@ -43,7 +44,11 @@ var timeLogger = {
                     $("#swipeTable").hide();
                 }
 
-                timeLogger.initializeTotalTimeCalculationOfWeek(response[1]);
+                var splitInputDate = input.fields.dateForLog.toString().split("-");
+
+                if ((splitInputDate[0] === $today.getDate()) && (splitInputDate[1] === $today.getMonth() + 1)) {
+                    timeLogger.initializeTotalTimeCalculationOfWeek(response[1]);
+                }
 
             });
 
@@ -62,7 +67,6 @@ var timeLogger = {
     },
 
     initializeTotalTimeCalculationOfWeek: function (response) {
-        var $today = new Date();
         var calculateWeekDay = $today.getDay();
 
         if (calculateWeekDay === 6 || calculateWeekDay === 0) {
