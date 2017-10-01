@@ -6,7 +6,6 @@ $(document).ready(function () {
 
     timeLogger.initializeDatePicker();
     timeLogger.initializeSubmitDataClick();
-    timeLogger.initializeTotalTimeCalculationOfWeek();
 });
 
 var todayLoggedTime;
