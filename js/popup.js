@@ -37,24 +37,22 @@ var timeLogger = {
 
             chrome.runtime.sendMessage(input, function (response) {
                 var totalTimeLoggedInADay = timeLogger.calculateTimeLogAndSetTableData(response[0]);
+                var splitedInputDate = input.fields.dateForLog.toString().split("-");
+                var inputDate = parseInt(splitedInputDate[1]);
+                var inputMonth = parseInt(splitedInputDate[0]);
+                var inputYear = parseInt(splitedInputDate[2]);
 
-                $("#chipDiv").hide();
 
-                if (totalTimeLoggedInADay != null && totalTimeLoggedInADay != 0) {
+                if (totalTimeLoggedInADay !== null && totalTimeLoggedInADay !== 0) {
                     timeLogger.setCalculatedTotalTimeToPage(totalTimeLoggedInADay);
+                    timeLogger.calculateTotalWeekTimeIfLoggedAndInputIsToday(inputDate, inputMonth, inputYear, response[1]);
                 } else {
-                    $("#swipeTable").hide();
-                    $("#chipDivHoliday").show();
+                    if (timeLogger.checkIfInputDateisOfFuture(inputDate, inputMonth, inputYear)) {
+                        $('#chipDivFuture').show();
+                    } else {
+                        $("#chipDivHoliday").show();
+                    }
                 }
-
-                var splitInputDate = input.fields.dateForLog.toString().split("-");
-
-                if ((splitInputDate[1] == $today.getDate())
-                    && (splitInputDate[0] == timeLogger.appendZeroIfSingleCharacter($today.getMonth() + 1))) {
-                    todayLoggedTime = totalTimeLoggedInADay;
-                    timeLogger.initializeTotalTimeCalculationOfWeek(response[1]);
-                }
-
             });
 
             event.preventDefault();
@@ -62,18 +60,40 @@ var timeLogger = {
     },
 
     hideAllDivsBeforeProcessing: function () {
-      for (var i=1; i < 4; i++) {
-          var elementId = 'chip' + i + 'Div';
-          $('#' + elementId).hide();
-      }
+        for (var i = 1; i < 4; i++) {
+            var elementId = 'chip' + i + 'Div';
+            $('#' + elementId).hide();
+        }
 
-      $('#chipDivMinReq').hide();
+        $("#swipeTable").hide();
+        $('#chipDivMinReq').hide();
+        $('#chipDivHoliday').hide();
+        $('#chipDivFuture').hide();
     },
 
-    appendZeroIfSingleCharacter: function (monthInInt) {
-        return monthInInt < 10
-            ? '0' + monthInInt
-            : monthInInt;
+    increment1900: function (year) {
+        return year + 1900;
+    },
+
+    calculateTotalWeekTimeIfLoggedAndInputIsToday: function (inputDate, inputMonth, inputYear, response) {
+        if (timeLogger.checkIfInputDateAndCurrentDateIsSame(inputDate, inputMonth, inputYear)) {
+            todayLoggedTime = totalTimeLoggedInADay;
+            timeLogger.initializeTotalTimeCalculationOfWeek(response);
+        }
+    },
+
+    checkIfInputDateAndCurrentDateIsSame: function (inputDate, inputMonth, inputYear) {
+        return inputDate === $today.getDate()
+            && inputMonth === ($today.getMonth() + 1)
+            && inputYear === timeLogger.increment1900($today.getYear());
+    },
+
+    checkIfInputDateisOfFuture: function (inputDate, inputMonth, inputYear) {
+        var convertTodaysYearInStyle = timeLogger.increment1900($today.getYear());
+
+        return inputYear > convertTodaysYearInStyle
+            || ((inputMonth > ($today.getMonth() + 1)) && (inputYear === convertTodaysYearInStyle))
+            || ((inputDate > $today.getDate()) && (inputMonth === ($today.getMonth() + 1)) && (inputYear === convertTodaysYearInStyle));
     },
 
     createInputToGetTime: function () {
@@ -93,7 +113,7 @@ var timeLogger = {
             $("#chipDivHoliday").show();
         } else {
             timeLogger.calculateTotalTimeLogForThisWeek(response);
-            if (todayLoggedTime < 330 && calculateWeekDay == 5) {
+            if (todayLoggedTime < 330 && calculateWeekDay === 5) {
                 $('#chipDivMinReq').show();
             }
         }
@@ -165,11 +185,11 @@ var timeLogger = {
             var armyTime = moment(this.swipeTime, ["h:mm A"]).format("HH:mm");
             var logDate = $("#dateForLog").val() + " " + armyTime + ":00";
 
-            if (lastIn == null && this.swipeInOut == "In") {
+            if (lastIn === null && this.swipeInOut === "In") {
                 lastIn = logDate;
             }
 
-            if (this.swipeInOut == "Out" && lastIn != null) {
+            if (this.swipeInOut === "Out" && lastIn !== null) {
                 var output = moment.utc(moment(logDate, "MM-DD-YYYY HH:mm:ss").diff(moment(lastIn, "MM-DD-YYYY HH:mm:ss"))).format("HH:mm");
                 var outputArray = output.split(":");
                 totalMinutes += (parseInt(outputArray[0]) * 60) + parseInt(outputArray[1]);
@@ -180,11 +200,11 @@ var timeLogger = {
             $("#timeLogTable").append($tr);
         });
 
-        if (lastIn != null) {
+        if (lastIn !== null) {
             var lastLog = new Date();
             var lastInDate = (moment(lastIn, "MM-DD-YYYY HH:mm:ss")).toDate();
 
-            if ((new Date).getDate() - lastInDate.getDate() != 0) {
+            if (((new Date).getDate() - lastInDate.getDate()) !== 0) {
                 lastLog.setHours(0, 0, 0);
             }
 
@@ -202,14 +222,14 @@ var timeLogger = {
     setCalculatedTotalTimeToPage: function (totalMinutes) {
         var $totalLogTime = $("<div>" + Math.floor(totalMinutes / 60) + " hours " + totalMinutes % 60 + " minutes </div>");
 
-        if (totalMinutes == 0) {
+        if (totalMinutes === 0) {
             $("#swipeTable").hide();
         } else {
             $("#swipeTable").show();
         }
 
         $(".js-chip").html($totalLogTime);
-        $("#chipDiv").show();
+        $("#chip1Div").show();
     }
 }
 
