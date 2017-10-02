@@ -44,6 +44,7 @@ var timeLogger = {
                     timeLogger.setCalculatedTotalTimeToPage(totalTimeLoggedInADay);
                 } else {
                     $("#swipeTable").hide();
+                    $("#chipDivHoliday").show();
                 }
 
                 var splitInputDate = input.fields.dateForLog.toString().split("-");
@@ -89,7 +90,7 @@ var timeLogger = {
         var calculateWeekDay = $today.getDay();
 
         if (calculateWeekDay === 6 || calculateWeekDay === 0) {
-            $("#chipDivWeekend").show();
+            $("#chipDivHoliday").show();
         } else {
             timeLogger.calculateTotalTimeLogForThisWeek(response);
             if (todayLoggedTime < 330 && calculateWeekDay == 5) {
