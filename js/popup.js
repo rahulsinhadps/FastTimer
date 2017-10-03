@@ -45,7 +45,7 @@ var timeLogger = {
 
                 if (totalTimeLoggedInADay !== null && totalTimeLoggedInADay !== 0) {
                     timeLogger.setCalculatedTotalTimeToPage(totalTimeLoggedInADay);
-                    timeLogger.calculateTotalWeekTimeIfLoggedAndInputIsToday(inputDate, inputMonth, inputYear, response[1]);
+                    timeLogger.calculateTotalWeekTimeIfLoggedAndInputIsToday(inputDate, inputMonth, inputYear, totalTimeLoggedInADay, response[1]);
                 } else {
                     if (timeLogger.checkIfInputDateisOfFuture(inputDate, inputMonth, inputYear)) {
                         $('#chipDivFuture').show();
@@ -75,7 +75,7 @@ var timeLogger = {
         return year + 1900;
     },
 
-    calculateTotalWeekTimeIfLoggedAndInputIsToday: function (inputDate, inputMonth, inputYear, response) {
+    calculateTotalWeekTimeIfLoggedAndInputIsToday: function (inputDate, inputMonth, inputYear, totalTimeLoggedInADay, response) {
         if (timeLogger.checkIfInputDateAndCurrentDateIsSame(inputDate, inputMonth, inputYear)) {
             todayLoggedTime = totalTimeLoggedInADay;
             timeLogger.initializeTotalTimeCalculationOfWeek(response);
