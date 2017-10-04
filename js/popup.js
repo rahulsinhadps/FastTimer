@@ -50,7 +50,9 @@ var timeLogger = {
                     if (timeLogger.checkIfInputDateisOfFuture(inputDate, inputMonth, inputYear)) {
                         $('#chipDivFuture').show();
                     } else {
-                        $("#chipDivHoliday").show();
+                        if ($today.getDate() > 5) {
+                            $("#chipDivHoliday").show();
+                        }
                     }
                 }
             });
